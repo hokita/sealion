@@ -41,16 +41,16 @@ export default function TodoList({ groupId }: TodoListProps) {
   }
 
   return (
-    <div className="flex-1 p-8">
-      <div className="max-w-3xl">
-        <div className="flex items-center gap-3 mb-6">
+    <div className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto">
+      <div className="max-w-3xl mx-auto">
+        <div className="flex items-center gap-3 mb-4 sm:mb-6">
           {groupId && group && (
             <div
-              className="w-6 h-6 rounded-full"
+              className="w-5 h-5 sm:w-6 sm:h-6 rounded-full flex-shrink-0"
               style={{ backgroundColor: group.color }}
             ></div>
           )}
-          <h1 className="text-3xl font-bold text-gray-900">{title}</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{title}</h1>
         </div>
 
         <AddTodoForm selectedGroupId={groupId} onTodoAdded={handleRefresh} />

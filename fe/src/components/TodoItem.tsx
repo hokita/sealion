@@ -26,23 +26,23 @@ export default function TodoItem({ todo, onTodoUpdated }: TodoItemProps) {
   };
 
   return (
-    <div className="flex items-center gap-3 px-4 py-3 bg-white border border-gray-200 rounded-lg hover:shadow-sm transition-shadow">
+    <div className="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2.5 sm:py-3 bg-white border border-gray-200 rounded-lg hover:shadow-sm transition-shadow">
       <input
         type="checkbox"
         checked={todo.completed}
         onChange={handleToggle}
         disabled={isUpdating}
-        className="w-5 h-5 text-blue-600 rounded cursor-pointer disabled:cursor-not-allowed"
+        className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 rounded cursor-pointer disabled:cursor-not-allowed flex-shrink-0"
       />
       <span
-        className={`flex-1 ${
+        className={`flex-1 text-sm sm:text-base ${
           todo.completed ? 'line-through text-gray-400' : 'text-gray-900'
         }`}
       >
         {todo.title}
       </span>
       {todo.completed && (
-        <span className="text-xs text-green-600 font-medium">✓ Done</span>
+        <span className="text-xs text-green-600 font-medium flex-shrink-0">✓ Done</span>
       )}
     </div>
   );

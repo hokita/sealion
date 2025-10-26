@@ -39,7 +39,7 @@ export default function Sidebar({
   }
 
   return (
-    <div className="w-64 border-r border-gray-200 bg-gray-50 p-4">
+    <div className="w-64 h-full border-r border-gray-200 bg-gray-50 p-4 overflow-y-auto">
       <h2 className="text-xl font-bold mb-4 text-gray-900">Groups</h2>
 
       {/* All Todos option */}
