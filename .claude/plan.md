@@ -13,6 +13,7 @@ Sealion is a simple todo list application.
 ### API
 
 - node.js + express.js
+- MySQL
 
 ### Common
 
