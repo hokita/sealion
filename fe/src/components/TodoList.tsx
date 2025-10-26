@@ -2,18 +2,26 @@
 
 import { useTodos, useGroupTodos, useGroup } from '@/hooks/useApi';
 import TodoItem from './TodoItem';
+import AddTodoForm from './AddTodoForm';
 
 interface TodoListProps {
   groupId: number | null;
 }
 
 export default function TodoList({ groupId }: TodoListProps) {
-  const { todos: allTodos, isLoading: allLoading } = useTodos();
-  const { todos: groupTodos, isLoading: groupLoading } = useGroupTodos(groupId);
+  const { todos: allTodos, isLoading: allLoading, mutate: mutateAll } = useTodos();
+  const { todos: groupTodos, isLoading: groupLoading, mutate: mutateGroup } = useGroupTodos(groupId);
   const { group } = useGroup(groupId);
 
   const todos = groupId ? groupTodos : allTodos;
   const isLoading = groupId ? groupLoading : allLoading;
+
+  const handleRefresh = () => {
+    mutateAll();
+    if (groupId) {
+      mutateGroup();
+    }
+  };
 
   const title = groupId && group ? group.name : 'All Todos';
 
@@ -45,6 +53,8 @@ export default function TodoList({ groupId }: TodoListProps) {
           <h1 className="text-3xl font-bold text-gray-900">{title}</h1>
         </div>
 
+        <AddTodoForm selectedGroupId={groupId} onTodoAdded={handleRefresh} />
+
         {!todos || todos.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-gray-400 text-lg">No todos yet</p>
@@ -52,7 +62,7 @@ export default function TodoList({ groupId }: TodoListProps) {
         ) : (
           <div className="space-y-2">
             {todos.map((todo) => (
-              <TodoItem key={todo.id} todo={todo} />
+              <TodoItem key={todo.id} todo={todo} onTodoUpdated={handleRefresh} />
             ))}
           </div>
         )}

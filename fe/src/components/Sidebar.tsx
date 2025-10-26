@@ -2,6 +2,7 @@
 
 import { Group } from '@/types';
 import { useGroups } from '@/hooks/useApi';
+import AddGroupForm from './AddGroupForm';
 
 interface SidebarProps {
   selectedGroupId: number | null;
@@ -12,7 +13,7 @@ export default function Sidebar({
   selectedGroupId,
   onSelectGroup,
 }: SidebarProps) {
-  const { groups, isLoading, isError } = useGroups();
+  const { groups, isLoading, isError, mutate } = useGroups();
 
   if (isLoading) {
     return (
@@ -55,7 +56,7 @@ export default function Sidebar({
       </button>
 
       {/* Groups list */}
-      <div className="space-y-1">
+      <div className="space-y-1 mb-4">
         {groups?.map((group: Group) => (
           <button
             key={group.id}
@@ -74,6 +75,9 @@ export default function Sidebar({
           </button>
         ))}
       </div>
+
+      {/* Add group form */}
+      <AddGroupForm onGroupAdded={mutate} />
     </div>
   );
 }

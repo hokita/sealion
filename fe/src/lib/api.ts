@@ -26,6 +26,19 @@ export const fetchGroupTodos = async (id: number): Promise<Todo[]> => {
   return response.data;
 };
 
+export const createGroup = async (
+  name: string,
+  color: string,
+  icon: string
+): Promise<Group> => {
+  const response = await apiClient.post<Group>('/api/groups', {
+    name,
+    color,
+    icon,
+  });
+  return response.data;
+};
+
 // Todos API
 export const fetchTodos = async (): Promise<Todo[]> => {
   const response = await apiClient.get<Todo[]>('/api/todos');
@@ -34,6 +47,25 @@ export const fetchTodos = async (): Promise<Todo[]> => {
 
 export const fetchTodoById = async (id: number): Promise<Todo> => {
   const response = await apiClient.get<Todo>(`/api/todos/${id}`);
+  return response.data;
+};
+
+export const createTodo = async (
+  title: string,
+  groupId: number
+): Promise<Todo> => {
+  const response = await apiClient.post<Todo>('/api/todos', {
+    title,
+    groupId,
+  });
+  return response.data;
+};
+
+export const updateTodo = async (
+  id: number,
+  updates: { title?: string; completed?: boolean; groupId?: number }
+): Promise<Todo> => {
+  const response = await apiClient.put<Todo>(`/api/todos/${id}`, updates);
   return response.data;
 };
 
