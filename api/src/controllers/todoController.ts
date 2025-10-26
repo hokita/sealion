@@ -25,11 +25,17 @@ export const getTodoById = async (req: Request, res: Response) => {
 
 export const createTodo = async (req: Request, res: Response) => {
   try {
-    const { title } = req.body;
+    const { title, groupId } = req.body;
     if (!title || typeof title !== 'string') {
       return res.status(400).json({ error: 'Title is required' });
     }
-    const todo = await db.createTodo(title);
+    if (!groupId || typeof groupId !== 'number') {
+      return res.status(400).json({ error: 'Group ID is required' });
+    }
+    const todo = await db.createTodo(title, groupId);
+    if (!todo) {
+      return res.status(400).json({ error: 'Invalid group ID' });
+    }
     res.status(201).json(todo);
   } catch (error) {
     res.status(500).json({ error: 'Failed to create todo' });
@@ -39,14 +45,18 @@ export const createTodo = async (req: Request, res: Response) => {
 export const updateTodo = async (req: Request, res: Response) => {
   try {
     const id = parseInt(req.params.id);
-    const { title, completed } = req.body;
-    const updates: { title?: string; completed?: boolean } = {};
+    const { title, completed, groupId } = req.body;
+    const updates: { title?: string; completed?: boolean; groupId?: number } =
+      {};
     if (title !== undefined) updates.title = title;
     if (completed !== undefined) updates.completed = completed;
+    if (groupId !== undefined) updates.groupId = groupId;
 
     const todo = await db.updateTodo(id, updates);
     if (!todo) {
-      return res.status(404).json({ error: 'Todo not found' });
+      return res
+        .status(404)
+        .json({ error: 'Todo not found or invalid group ID' });
     }
     res.json(todo);
   } catch (error) {

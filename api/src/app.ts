@@ -1,6 +1,7 @@
 import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
 import todoRoutes from './routes/todoRoutes';
+import groupRoutes from './routes/groupRoutes';
 
 const app: Express = express();
 
@@ -18,6 +19,7 @@ app.get('/health', (req: Request, res: Response) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+app.use('/api/groups', groupRoutes);
 app.use('/api/todos', todoRoutes);
 
 export default app;
