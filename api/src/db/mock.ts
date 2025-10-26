@@ -62,8 +62,73 @@ class MockDatabase {
       updatedAt: new Date(),
     },
   ];
-  private todos: Todo[] = [];
-  private currentTodoId = 1;
+  private todos: Todo[] = [
+    {
+      id: 1,
+      title: 'Buy groceries',
+      completed: false,
+      groupId: 2,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+    {
+      id: 2,
+      title: 'Buy milk and eggs',
+      completed: true,
+      groupId: 2,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+    {
+      id: 3,
+      title: 'Read Chapter 5',
+      completed: false,
+      groupId: 3,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+    {
+      id: 4,
+      title: 'Complete math homework',
+      completed: false,
+      groupId: 3,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+    {
+      id: 5,
+      title: 'Prepare presentation',
+      completed: true,
+      groupId: 4,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+    {
+      id: 6,
+      title: 'Review project proposal',
+      completed: false,
+      groupId: 4,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+    {
+      id: 7,
+      title: 'Call dentist',
+      completed: false,
+      groupId: 5,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+    {
+      id: 8,
+      title: 'Schedule car maintenance',
+      completed: false,
+      groupId: 5,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+  ];
+  private currentTodoId = 9;
   private currentGroupId = 6;
 
   // Group methods
