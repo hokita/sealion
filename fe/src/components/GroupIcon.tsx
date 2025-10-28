@@ -26,7 +26,10 @@ const iconMap: Record<string, LucideIcon> = {
   home: Home,
 };
 
-export default function GroupIcon({ iconName, className = 'w-4 h-4' }: GroupIconProps) {
+export default function GroupIcon({
+  iconName,
+  className = 'w-4 h-4',
+}: GroupIconProps) {
   const Icon = iconMap[iconName] || Inbox;
   return <Icon className={className} />;
 }

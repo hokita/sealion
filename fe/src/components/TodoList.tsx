@@ -10,8 +10,16 @@ interface TodoListProps {
 }
 
 export default function TodoList({ groupId }: TodoListProps) {
-  const { todos: allTodos, isLoading: allLoading, mutate: mutateAll } = useTodos();
-  const { todos: groupTodos, isLoading: groupLoading, mutate: mutateGroup } = useGroupTodos(groupId);
+  const {
+    todos: allTodos,
+    isLoading: allLoading,
+    mutate: mutateAll,
+  } = useTodos();
+  const {
+    todos: groupTodos,
+    isLoading: groupLoading,
+    mutate: mutateGroup,
+  } = useGroupTodos(groupId);
   const { group } = useGroup(groupId);
 
   const todos = groupId ? groupTodos : allTodos;
@@ -47,10 +55,15 @@ export default function TodoList({ groupId }: TodoListProps) {
         <div className="flex items-center gap-3 mb-4 sm:mb-6">
           {groupId && group && (
             <div className="flex-shrink-0" style={{ color: group.color }}>
-              <GroupIcon iconName={group.icon} className="w-6 h-6 sm:w-7 sm:h-7" />
+              <GroupIcon
+                iconName={group.icon}
+                className="w-6 h-6 sm:w-7 sm:h-7"
+              />
             </div>
           )}
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{title}</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+            {title}
+          </h1>
         </div>
 
         <AddTodoForm selectedGroupId={groupId} onTodoAdded={handleRefresh} />
@@ -62,7 +75,11 @@ export default function TodoList({ groupId }: TodoListProps) {
         ) : (
           <div className="space-y-2">
             {todos.map((todo) => (
-              <TodoItem key={todo.id} todo={todo} onTodoUpdated={handleRefresh} />
+              <TodoItem
+                key={todo.id}
+                todo={todo}
+                onTodoUpdated={handleRefresh}
+              />
             ))}
           </div>
         )}

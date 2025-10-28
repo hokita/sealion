@@ -42,7 +42,9 @@ export default function TodoItem({ todo, onTodoUpdated }: TodoItemProps) {
         {todo.title}
       </span>
       {todo.completed && (
-        <span className="text-xs text-green-600 font-medium flex-shrink-0">✓ Done</span>
+        <span className="text-xs text-green-600 font-medium flex-shrink-0">
+          ✓ Done
+        </span>
       )}
     </div>
   );

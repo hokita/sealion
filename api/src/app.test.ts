@@ -24,11 +24,11 @@ describe('API Server', () => {
 });
 
 describe('Groups API', () => {
-  it('should get hard-coded groups', async () => {
+  it('should get groups from database', async () => {
     const response = await request(app).get('/api/groups');
     expect(response.status).toBe(200);
     expect(Array.isArray(response.body)).toBe(true);
-    expect(response.body.length).toBe(5);
+    expect(response.body.length).toBeGreaterThanOrEqual(5);
     expect(response.body[0]).toHaveProperty('name', 'Uncategorized');
     expect(response.body[0]).toHaveProperty('id', 1);
     expect(response.body[0]).toHaveProperty('color');

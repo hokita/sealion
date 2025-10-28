@@ -5,7 +5,7 @@ export const getAllTodos = async (req: Request, res: Response) => {
   try {
     const todos = await todoRepository.getAllTodos();
     res.json(todos);
-  } catch (error) {
+  } catch (_error) {
     res.status(500).json({ error: 'Failed to fetch todos' });
   }
 };
@@ -18,7 +18,7 @@ export const getTodoById = async (req: Request, res: Response) => {
       return res.status(404).json({ error: 'Todo not found' });
     }
     res.json(todo);
-  } catch (error) {
+  } catch (_error) {
     res.status(500).json({ error: 'Failed to fetch todo' });
   }
 };
@@ -31,7 +31,7 @@ export const getTodosByGroupId = async (req: Request, res: Response) => {
     }
     const todos = await todoRepository.getTodosByGroupId(groupId);
     res.json(todos);
-  } catch (error) {
+  } catch (_error) {
     res.status(500).json({ error: 'Failed to fetch todos for group' });
   }
 };
@@ -50,7 +50,7 @@ export const createTodo = async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'Invalid group ID' });
     }
     res.status(201).json(todo);
-  } catch (error) {
+  } catch (_error) {
     res.status(500).json({ error: 'Failed to create todo' });
   }
 };
@@ -72,7 +72,7 @@ export const updateTodo = async (req: Request, res: Response) => {
         .json({ error: 'Todo not found or invalid group ID' });
     }
     res.json(todo);
-  } catch (error) {
+  } catch (_error) {
     res.status(500).json({ error: 'Failed to update todo' });
   }
 };
@@ -85,7 +85,7 @@ export const deleteTodo = async (req: Request, res: Response) => {
       return res.status(404).json({ error: 'Todo not found' });
     }
     res.status(204).send();
-  } catch (error) {
+  } catch (_error) {
     res.status(500).json({ error: 'Failed to delete todo' });
   }
 };

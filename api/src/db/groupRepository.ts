@@ -71,7 +71,7 @@ export const updateGroup = async (
 ): Promise<Group | null> => {
   const pool = getPool();
   const fields: string[] = [];
-  const values: any[] = [];
+  const values: (string | number)[] = [];
 
   if (updates.name !== undefined) {
     fields.push('name = ?');

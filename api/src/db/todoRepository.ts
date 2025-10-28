@@ -60,7 +60,7 @@ export const createTodo = async (
     );
     const newTodo = await getTodoById(result.insertId);
     return newTodo;
-  } catch (error) {
+  } catch (_error) {
     // Foreign key constraint will fail if groupId doesn't exist
     return null;
   }
@@ -72,7 +72,7 @@ export const updateTodo = async (
 ): Promise<Todo | null> => {
   const pool = getPool();
   const setClauses: string[] = [];
-  const values: any[] = [];
+  const values: (string | boolean | number)[] = [];
 
   if (updates.title !== undefined) {
     setClauses.push('title = ?');
@@ -106,7 +106,7 @@ export const updateTodo = async (
     }
 
     return getTodoById(id);
-  } catch (error) {
+  } catch (_error) {
     // Foreign key constraint will fail if groupId doesn't exist
     return null;
   }
