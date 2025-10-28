@@ -36,7 +36,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: your-registry/sealion-api:latest  # UPDATE THIS
+          image: ghcr.io/hokita/sealion-api:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 3001

@@ -36,7 +36,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: your-registry/sealion-frontend:latest # UPDATE THIS
+          image: ghcr.io/hokita/sealion-fe:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
