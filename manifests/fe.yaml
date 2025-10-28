@@ -2,10 +2,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: frontend-service
+  name: fe-service
   namespace: sealion
   labels:
-    app: sealion-frontend
+    app: sealion-fe
 spec:
   type: NodePort
   ports:
@@ -15,27 +15,27 @@ spec:
       protocol: TCP
       name: http
   selector:
-    app: sealion-frontend
+    app: sealion-fe
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: sealion-frontend
+  name: sealion-fe
   namespace: sealion
   labels:
-    app: sealion-frontend
+    app: sealion-fe
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: sealion-frontend
+      app: sealion-fe
   template:
     metadata:
       labels:
-        app: sealion-frontend
+        app: sealion-fe
     spec:
       containers:
-        - name: frontend
+        - name: fe
           image: ghcr.io/hokita/sealion-fe:latest
           imagePullPolicy: Always
           ports:
