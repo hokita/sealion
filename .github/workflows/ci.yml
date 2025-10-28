@@ -10,8 +10,32 @@ on:
   workflow_dispatch:
 
 jobs:
+  changes:
+    name: Detect Changes
+    runs-on: ubuntu-latest
+    outputs:
+      frontend: ${{ steps.filter.outputs.frontend }}
+      api: ${{ steps.filter.outputs.api }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check for changes
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            frontend:
+              - 'fe/**'
+              - '.github/workflows/ci.yml'
+            api:
+              - 'api/**'
+              - '.github/workflows/ci.yml'
+
   frontend-checks:
     name: Frontend - Lint & Type Check
+    needs: changes
+    if: ${{ needs.changes.outputs.frontend == 'true' }}
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -42,6 +66,8 @@ jobs:
 
   frontend-tests:
     name: Frontend - Tests
+    needs: changes
+    if: ${{ needs.changes.outputs.frontend == 'true' }}
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -75,6 +101,8 @@ jobs:
 
   api-checks:
     name: API - Lint & Type Check
+    needs: changes
+    if: ${{ needs.changes.outputs.api == 'true' }}
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -105,6 +133,8 @@ jobs:
 
   api-tests:
     name: API - Tests
+    needs: changes
+    if: ${{ needs.changes.outputs.api == 'true' }}
     runs-on: ubuntu-latest
     defaults:
       run:
