@@ -3,6 +3,7 @@
 import { Group } from '@/types';
 import { useGroups } from '@/hooks/useApi';
 import AddGroupForm from './AddGroupForm';
+import GroupIcon from './GroupIcon';
 
 interface SidebarProps {
   selectedGroupId: number | null;
@@ -67,10 +68,9 @@ export default function Sidebar({
                 : 'hover:bg-gray-100 text-gray-700'
             }`}
           >
-            <div
-              className="w-4 h-4 rounded-full"
-              style={{ backgroundColor: group.color }}
-            ></div>
+            <div style={{ color: group.color }}>
+              <GroupIcon iconName={group.icon} className="w-5 h-5" />
+            </div>
             <span className="font-medium">{group.name}</span>
           </button>
         ))}
