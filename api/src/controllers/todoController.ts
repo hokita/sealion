@@ -23,6 +23,19 @@ export const getTodoById = async (req: Request, res: Response) => {
   }
 };
 
+export const getTodosByGroupId = async (req: Request, res: Response) => {
+  try {
+    const groupId = parseInt(req.params.id);
+    if (isNaN(groupId)) {
+      return res.status(400).json({ error: 'Invalid group ID' });
+    }
+    const todos = await todoRepository.getTodosByGroupId(groupId);
+    res.json(todos);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch todos for group' });
+  }
+};
+
 export const createTodo = async (req: Request, res: Response) => {
   try {
     const { title, groupId } = req.body;
