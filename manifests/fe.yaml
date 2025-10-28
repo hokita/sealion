@@ -58,10 +58,10 @@ spec:
             httpGet:
               path: /api/health
               port: 3000
-            initialDelaySeconds: 10
-            periodSeconds: 5
-            timeoutSeconds: 3
-            failureThreshold: 2
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 30
+            failureThreshold: 5
           resources:
             requests:
               memory: "128Mi"
