@@ -1,7 +1,7 @@
 import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
 import todoRoutes from './routes/todoRoutes';
-import groupRoutes from './routes/groupRoutes';
+import { GROUPS } from './constants/groups';
 
 const app: Express = express();
 
@@ -19,7 +19,11 @@ app.get('/health', (req: Request, res: Response) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-app.use('/api/groups', groupRoutes);
+// Simple read-only groups endpoint
+app.get('/api/groups', (req: Request, res: Response) => {
+  res.json(GROUPS);
+});
+
 app.use('/api/todos', todoRoutes);
 
 export default app;

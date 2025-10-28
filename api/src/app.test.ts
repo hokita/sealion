@@ -22,51 +22,15 @@ describe('API Server', () => {
 });
 
 describe('Groups API', () => {
-  beforeEach(() => {
-    db.reset();
-  });
-
-  it('should get default groups', async () => {
+  it('should get hard-coded groups', async () => {
     const response = await request(app).get('/api/groups');
     expect(response.status).toBe(200);
     expect(Array.isArray(response.body)).toBe(true);
     expect(response.body.length).toBe(5);
     expect(response.body[0]).toHaveProperty('name', 'Uncategorized');
-  });
-
-  it('should create a new group', async () => {
-    const response = await request(app).post('/api/groups').send({
-      name: 'Fitness',
-      color: '#EF4444',
-      icon: 'dumbbell',
-    });
-    expect(response.status).toBe(201);
-    expect(response.body).toHaveProperty('id');
-    expect(response.body).toHaveProperty('name', 'Fitness');
-    expect(response.body).toHaveProperty('color', '#EF4444');
-    expect(response.body).toHaveProperty('icon', 'dumbbell');
-  });
-
-  it('should get a group by id', async () => {
-    const response = await request(app).get('/api/groups/1');
-    expect(response.status).toBe(200);
-    expect(response.body).toHaveProperty('name', 'Uncategorized');
-  });
-
-  it('should update a group', async () => {
-    const response = await request(app)
-      .put('/api/groups/1')
-      .send({ name: 'General' });
-    expect(response.status).toBe(200);
-    expect(response.body).toHaveProperty('name', 'General');
-  });
-
-  it('should not delete group with todos', async () => {
-    await request(app)
-      .post('/api/todos')
-      .send({ title: 'Test todo', groupId: 1 });
-    const response = await request(app).delete('/api/groups/1');
-    expect(response.status).toBe(400);
+    expect(response.body[0]).toHaveProperty('id', 1);
+    expect(response.body[0]).toHaveProperty('color');
+    expect(response.body[0]).toHaveProperty('icon');
   });
 });
 
@@ -98,21 +62,6 @@ describe('Todos API', () => {
       .post('/api/todos')
       .send({ title: 'Test todo', groupId: 999 });
     expect(response.status).toBe(400);
-  });
-
-  it('should get todos for a group', async () => {
-    await request(app)
-      .post('/api/todos')
-      .send({ title: 'Shopping todo', groupId: 2 });
-    await request(app)
-      .post('/api/todos')
-      .send({ title: 'Study todo', groupId: 3 });
-
-    const response = await request(app).get('/api/groups/2/todos');
-    expect(response.status).toBe(200);
-    expect(Array.isArray(response.body)).toBe(true);
-    expect(response.body.length).toBe(1);
-    expect(response.body[0]).toHaveProperty('title', 'Shopping todo');
   });
 
   it('should update todo group', async () => {
