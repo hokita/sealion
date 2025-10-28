@@ -1,40 +1,25 @@
 import { RowDataPacket, ResultSetHeader } from 'mysql2';
 import { getPool } from './connection';
-import { GROUPS } from '../constants/groups';
-
-export interface Todo {
-  id: number;
-  title: string;
-  completed: boolean;
-  groupId: number;
-  createdAt: Date;
-  updatedAt: Date;
-}
+import { Todo } from '../types';
 
 interface TodoRow extends RowDataPacket {
   id: number;
   title: string;
   completed: number;
-  group: string;
+  group_id: number;
   created_at: Date;
   updated_at: Date;
 }
 
 const mapRowToTodo = (row: TodoRow): Todo => {
-  const group = GROUPS.find((g) => g.name === row.group);
   return {
     id: row.id,
     title: row.title,
     completed: Boolean(row.completed),
-    groupId: group?.id || 1,
+    groupId: row.group_id,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };
-};
-
-const getGroupNameById = (groupId: number): string => {
-  const group = GROUPS.find((g) => g.id === groupId);
-  return group?.name || 'Uncategorized';
 };
 
 export const getAllTodos = async (): Promise<Todo[]> => {
@@ -56,10 +41,9 @@ export const getTodoById = async (id: number): Promise<Todo | null> => {
 
 export const getTodosByGroupId = async (groupId: number): Promise<Todo[]> => {
   const pool = getPool();
-  const groupName = getGroupNameById(groupId);
   const [rows] = await pool.query<TodoRow[]>(
-    'SELECT * FROM sealion_todos WHERE `group` = ? ORDER BY created_at DESC',
-    [groupName]
+    'SELECT * FROM sealion_todos WHERE group_id = ? ORDER BY created_at DESC',
+    [groupId]
   );
   return rows.map(mapRowToTodo);
 };
@@ -68,34 +52,24 @@ export const createTodo = async (
   title: string,
   groupId: number
 ): Promise<Todo | null> => {
-  // Validate groupId exists
-  const group = GROUPS.find((g) => g.id === groupId);
-  if (!group) {
+  const pool = getPool();
+  try {
+    const [result] = await pool.query<ResultSetHeader>(
+      'INSERT INTO sealion_todos (title, completed, group_id) VALUES (?, ?, ?)',
+      [title, false, groupId]
+    );
+    const newTodo = await getTodoById(result.insertId);
+    return newTodo;
+  } catch (error) {
+    // Foreign key constraint will fail if groupId doesn't exist
     return null;
   }
-
-  const pool = getPool();
-  const [result] = await pool.query<ResultSetHeader>(
-    'INSERT INTO sealion_todos (title, completed, `group`) VALUES (?, ?, ?)',
-    [title, false, group.name]
-  );
-
-  const newTodo = await getTodoById(result.insertId);
-  return newTodo;
 };
 
 export const updateTodo = async (
   id: number,
   updates: { title?: string; completed?: boolean; groupId?: number }
 ): Promise<Todo | null> => {
-  // Validate groupId if it's being updated
-  if (updates.groupId !== undefined) {
-    const group = GROUPS.find((g) => g.id === updates.groupId);
-    if (!group) {
-      return null;
-    }
-  }
-
   const pool = getPool();
   const setClauses: string[] = [];
   const values: any[] = [];
@@ -111,9 +85,8 @@ export const updateTodo = async (
   }
 
   if (updates.groupId !== undefined) {
-    const groupName = getGroupNameById(updates.groupId);
-    setClauses.push('`group` = ?');
-    values.push(groupName);
+    setClauses.push('group_id = ?');
+    values.push(updates.groupId);
   }
 
   if (setClauses.length === 0) {
@@ -122,16 +95,21 @@ export const updateTodo = async (
 
   values.push(id);
 
-  const [result] = await pool.query<ResultSetHeader>(
-    `UPDATE sealion_todos SET ${setClauses.join(', ')} WHERE id = ?`,
-    values
-  );
+  try {
+    const [result] = await pool.query<ResultSetHeader>(
+      `UPDATE sealion_todos SET ${setClauses.join(', ')} WHERE id = ?`,
+      values
+    );
 
-  if (result.affectedRows === 0) {
+    if (result.affectedRows === 0) {
+      return null;
+    }
+
+    return getTodoById(id);
+  } catch (error) {
+    // Foreign key constraint will fail if groupId doesn't exist
     return null;
   }
-
-  return getTodoById(id);
 };
 
 export const deleteTodo = async (id: number): Promise<boolean> => {
