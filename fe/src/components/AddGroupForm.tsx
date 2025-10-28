@@ -75,7 +75,7 @@ export default function AddGroupForm({ onGroupAdded }: AddGroupFormProps) {
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Group name"
-          className="w-full px-3 py-2 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
           disabled={isSubmitting}
           autoFocus
         />
@@ -101,7 +101,7 @@ export default function AddGroupForm({ onGroupAdded }: AddGroupFormProps) {
           <select
             value={icon}
             onChange={(e) => setIcon(e.target.value)}
-            className="w-full px-3 py-2 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 text-sm text-gray-900 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
             disabled={isSubmitting}
           >
             {ICONS.map((i) => (
