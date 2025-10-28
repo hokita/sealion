@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
-import { db } from '../db/mock';
+import * as todoRepository from '../db/todoRepository';
 
 export const getAllTodos = async (req: Request, res: Response) => {
   try {
-    const todos = await db.getAllTodos();
+    const todos = await todoRepository.getAllTodos();
     res.json(todos);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch todos' });
@@ -13,7 +13,7 @@ export const getAllTodos = async (req: Request, res: Response) => {
 export const getTodoById = async (req: Request, res: Response) => {
   try {
     const id = parseInt(req.params.id);
-    const todo = await db.getTodoById(id);
+    const todo = await todoRepository.getTodoById(id);
     if (!todo) {
       return res.status(404).json({ error: 'Todo not found' });
     }
@@ -32,7 +32,7 @@ export const createTodo = async (req: Request, res: Response) => {
     if (!groupId || typeof groupId !== 'number') {
       return res.status(400).json({ error: 'Group ID is required' });
     }
-    const todo = await db.createTodo(title, groupId);
+    const todo = await todoRepository.createTodo(title, groupId);
     if (!todo) {
       return res.status(400).json({ error: 'Invalid group ID' });
     }
@@ -52,7 +52,7 @@ export const updateTodo = async (req: Request, res: Response) => {
     if (completed !== undefined) updates.completed = completed;
     if (groupId !== undefined) updates.groupId = groupId;
 
-    const todo = await db.updateTodo(id, updates);
+    const todo = await todoRepository.updateTodo(id, updates);
     if (!todo) {
       return res
         .status(404)
@@ -67,7 +67,7 @@ export const updateTodo = async (req: Request, res: Response) => {
 export const deleteTodo = async (req: Request, res: Response) => {
   try {
     const id = parseInt(req.params.id);
-    const success = await db.deleteTodo(id);
+    const success = await todoRepository.deleteTodo(id);
     if (!success) {
       return res.status(404).json({ error: 'Todo not found' });
     }

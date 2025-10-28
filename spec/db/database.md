@@ -15,7 +15,7 @@ Groups are hard-coded in the application and not stored in the database. The ava
 
 ## Tables
 
-### todos
+### sealion_todos
 
 Todo items table storing all todo list entries.
 
