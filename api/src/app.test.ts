@@ -1,12 +1,27 @@
 import request from 'supertest';
 import app from './app';
-import { getPool } from './db/connection';
+import { setPool } from './db/connection';
+import {
+  setupTestDatabase,
+  cleanupTestDatabase,
+  clearTestData,
+} from './db/testConnection';
+
+beforeAll(() => {
+  // Set up SQLite test database
+  const testPool = setupTestDatabase();
+  setPool(testPool);
+});
+
+afterAll(async () => {
+  // Clean up test database
+  await cleanupTestDatabase();
+});
 
 describe('API Server', () => {
   beforeEach(async () => {
-    // Clean up database before each test
-    const pool = getPool();
-    await pool.query('DELETE FROM sealion_todos');
+    // Clean up todos before each test
+    await clearTestData();
   });
 
   it('should respond to health check', async () => {
@@ -38,8 +53,7 @@ describe('Groups API', () => {
 
 describe('Todos API', () => {
   beforeEach(async () => {
-    const pool = getPool();
-    await pool.query('DELETE FROM sealion_todos');
+    await clearTestData();
   });
 
   it('should get empty todos list initially', async () => {

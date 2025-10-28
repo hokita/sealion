@@ -10,6 +10,11 @@ export const getPool = (): mysql.Pool => {
   return pool;
 };
 
+// For testing: allow setting a custom pool
+export const setPool = (customPool: mysql.Pool): void => {
+  pool = customPool;
+};
+
 export const closePool = async (): Promise<void> => {
   if (pool) {
     await pool.end();
