@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import Sidebar from '@/components/Sidebar';
 import TodoList from '@/components/TodoList';
 
@@ -59,8 +60,29 @@ export default function Home() {
               />
             </svg>
           </button>
-          <h1 className="text-lg font-bold">Sealion Todos</h1>
+          <div className="flex items-center gap-3">
+            <Image
+              src="/sealion.png"
+              alt="Sealion"
+              width={48}
+              height={48}
+              className="w-12 h-12"
+            />
+            <h1 className="text-2xl font-bold text-gray-900">Sealion</h1>
+          </div>
           <div className="w-10" /> {/* Spacer for centering */}
+        </div>
+
+        {/* Desktop header */}
+        <div className="hidden lg:flex items-center gap-4 p-6 border-b border-gray-200 bg-white">
+          <Image
+            src="/sealion.png"
+            alt="Sealion"
+            width={56}
+            height={56}
+            className="w-14 h-14"
+          />
+          <h1 className="text-4xl font-bold text-gray-900">Sealion</h1>
         </div>
 
         <TodoList groupId={selectedGroupId} />
