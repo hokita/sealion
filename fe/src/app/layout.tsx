@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Sealion Todos',
+  title: 'Sealion',
   description: 'A simple and elegant todo list application',
 };
 
