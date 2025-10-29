@@ -47,7 +47,7 @@ export default function Home() {
             className="p-2 rounded-lg hover:bg-gray-100"
           >
             <svg
-              className="w-6 h-6"
+              className="w-6 h-6 text-gray-900"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
