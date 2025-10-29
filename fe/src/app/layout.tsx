@@ -15,10 +15,6 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: 'Sealion Todos',
   description: 'A simple and elegant todo list application',
-  icons: {
-    icon: '/sealion.png',
-    apple: '/sealion.png',
-  },
 };
 
 export const viewport = {
