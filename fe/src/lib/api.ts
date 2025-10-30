@@ -39,6 +39,14 @@ export const createGroup = async (
   return response.data;
 };
 
+export const updateGroup = async (
+  id: number,
+  updates: { name?: string; color?: string; icon?: string }
+): Promise<Group> => {
+  const response = await apiClient.put<Group>(`/api/groups/${id}`, updates);
+  return response.data;
+};
+
 // Todos API
 export const fetchTodos = async (): Promise<Todo[]> => {
   const response = await apiClient.get<Todo[]>('/api/todos');

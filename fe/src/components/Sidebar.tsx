@@ -1,9 +1,12 @@
 'use client';
 
+import { useState } from 'react';
 import { Group } from '@/types';
 import { useGroups } from '@/hooks/useApi';
 import AddGroupForm from './AddGroupForm';
+import EditGroupForm from './EditGroupForm';
 import GroupIcon from './GroupIcon';
+import { Pencil } from 'lucide-react';
 
 interface SidebarProps {
   selectedGroupId: number | null;
@@ -15,6 +18,7 @@ export default function Sidebar({
   onSelectGroup,
 }: SidebarProps) {
   const { groups, isLoading, isError, mutate } = useGroups();
+  const [editingGroup, setEditingGroup] = useState<Group | null>(null);
 
   if (isLoading) {
     return (
@@ -59,25 +63,51 @@ export default function Sidebar({
       {/* Groups list */}
       <div className="space-y-1 mb-4">
         {groups?.map((group: Group) => (
-          <button
+          <div
             key={group.id}
-            onClick={() => onSelectGroup(group.id)}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
+            className={`group/item w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
               selectedGroupId === group.id
                 ? 'bg-blue-100 text-blue-900'
                 : 'hover:bg-gray-100 text-gray-700'
             }`}
           >
-            <div style={{ color: group.color }}>
-              <GroupIcon iconName={group.icon} className="w-5 h-5" />
-            </div>
-            <span className="font-medium">{group.name}</span>
-          </button>
+            <button
+              onClick={() => onSelectGroup(group.id)}
+              className="flex items-center gap-3 flex-1 min-w-0"
+            >
+              <div style={{ color: group.color }}>
+                <GroupIcon iconName={group.icon} className="w-5 h-5" />
+              </div>
+              <span className="font-medium truncate">{group.name}</span>
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setEditingGroup(group);
+              }}
+              className="opacity-0 group-hover/item:opacity-100 p-1 hover:bg-gray-200 rounded transition-opacity"
+              title="Edit group"
+            >
+              <Pencil className="w-4 h-4 text-gray-600" />
+            </button>
+          </div>
         ))}
       </div>
 
       {/* Add group form */}
       <AddGroupForm onGroupAdded={mutate} />
+
+      {/* Edit group modal */}
+      {editingGroup && (
+        <EditGroupForm
+          group={editingGroup}
+          onGroupUpdated={() => {
+            mutate();
+            setEditingGroup(null);
+          }}
+          onCancel={() => setEditingGroup(null)}
+        />
+      )}
     </div>
   );
 }
