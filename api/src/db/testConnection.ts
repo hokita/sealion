@@ -50,7 +50,7 @@ export const setupTestDatabase = (): mysql.Pool => {
         if (normalizedSql.startsWith('DELETE')) {
           const stmt = testDb!.prepare(sql);
           const result = params ? stmt.run(...params) : stmt.run();
-          return [{ affectedRows: result.changes }];
+          return [{ affectedRows: result.changes }, []];
         }
 
         // Handle INSERT queries
@@ -65,6 +65,7 @@ export const setupTestDatabase = (): mysql.Pool => {
             : stmt.run();
           return [
             { insertId: result.lastInsertRowid, affectedRows: result.changes },
+            [],
           ];
         }
 
@@ -78,7 +79,7 @@ export const setupTestDatabase = (): mysql.Pool => {
           const result = convertedParams
             ? stmt.run(...convertedParams)
             : stmt.run();
-          return [{ affectedRows: result.changes }];
+          return [{ affectedRows: result.changes }, []];
         }
 
         // Handle SELECT queries
@@ -87,14 +88,16 @@ export const setupTestDatabase = (): mysql.Pool => {
           const rows = params ? stmt.all(...params) : stmt.all();
 
           // Convert SQLite integer booleans to JavaScript booleans for completed field
-          const convertedRows = rows.map((row: Record<string, unknown>) => {
-            if ('completed' in row) {
-              return { ...row, completed: row.completed === 1 };
+          const convertedRows = (rows as Record<string, unknown>[]).map(
+            (row) => {
+              if ('completed' in row) {
+                return { ...row, completed: row.completed === 1 };
+              }
+              return row;
             }
-            return row;
-          });
+          );
 
-          return [convertedRows];
+          return [convertedRows, []];
         }
 
         throw new Error(`Unsupported SQL operation: ${sql}`);
@@ -109,19 +112,20 @@ export const setupTestDatabase = (): mysql.Pool => {
         throw error;
       }
     },
-    getConnection: async () => ({
-      ping: async () => {},
-      release: () => {},
-    }),
+    getConnection: async () =>
+      ({
+        ping: async () => {},
+        release: () => {},
+      }) as mysql.PoolConnection,
     end: async () => {
       if (testDb) {
         testDb.close();
         testDb = null;
       }
     },
-  };
+  } as unknown as mysql.Pool;
 
-  return mockPool as mysql.Pool;
+  return mockPool;
 };
 
 export const cleanupTestDatabase = async (): Promise<void> => {
