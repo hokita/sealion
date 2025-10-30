@@ -85,7 +85,7 @@ export default function Sidebar({
                 e.stopPropagation();
                 setEditingGroup(group);
               }}
-              className="opacity-0 group-hover/item:opacity-100 p-1 hover:bg-gray-200 rounded transition-opacity"
+              className="md:opacity-0 md:group-hover/item:opacity-100 p-1 hover:bg-gray-200 rounded transition-opacity"
               title="Edit group"
             >
               <Pencil className="w-4 h-4 text-gray-600" />
