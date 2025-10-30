@@ -111,7 +111,9 @@ export default function EditGroupForm({
                   type="button"
                   onClick={() => setColor(c.value)}
                   className={`w-8 h-8 rounded-full ${
-                    color === c.value ? 'ring-2 ring-offset-2 ring-blue-500' : ''
+                    color === c.value
+                      ? 'ring-2 ring-offset-2 ring-blue-500'
+                      : ''
                   }`}
                   style={{ backgroundColor: c.value }}
                   disabled={isSubmitting}

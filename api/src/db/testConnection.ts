@@ -2,7 +2,7 @@ import Database from 'better-sqlite3';
 import mysql from 'mysql2/promise';
 
 let testDb: Database.Database | null = null;
-let mockPool: any = null;
+let mockPool: mysql.Pool | null = null;
 
 export const setupTestDatabase = (): mysql.Pool => {
   // Create in-memory SQLite database
@@ -42,7 +42,7 @@ export const setupTestDatabase = (): mysql.Pool => {
 
   // Create a mock pool that adapts SQLite to mysql2 interface
   mockPool = {
-    query: async (sql: string, params?: any[]) => {
+    query: async (sql: string, params?: unknown[]) => {
       try {
         const normalizedSql = sql.trim();
 
@@ -56,22 +56,28 @@ export const setupTestDatabase = (): mysql.Pool => {
         // Handle INSERT queries
         if (normalizedSql.startsWith('INSERT')) {
           // Convert boolean to integer for SQLite
-          const convertedParams = params?.map(param =>
+          const convertedParams = params?.map((param) =>
             typeof param === 'boolean' ? (param ? 1 : 0) : param
           );
           const stmt = testDb!.prepare(sql);
-          const result = convertedParams ? stmt.run(...convertedParams) : stmt.run();
-          return [{ insertId: result.lastInsertRowid, affectedRows: result.changes }];
+          const result = convertedParams
+            ? stmt.run(...convertedParams)
+            : stmt.run();
+          return [
+            { insertId: result.lastInsertRowid, affectedRows: result.changes },
+          ];
         }
 
         // Handle UPDATE queries
         if (normalizedSql.startsWith('UPDATE')) {
           // Convert boolean to integer for SQLite
-          const convertedParams = params?.map(param =>
+          const convertedParams = params?.map((param) =>
             typeof param === 'boolean' ? (param ? 1 : 0) : param
           );
           const stmt = testDb!.prepare(sql);
-          const result = convertedParams ? stmt.run(...convertedParams) : stmt.run();
+          const result = convertedParams
+            ? stmt.run(...convertedParams)
+            : stmt.run();
           return [{ affectedRows: result.changes }];
         }
 
@@ -81,7 +87,7 @@ export const setupTestDatabase = (): mysql.Pool => {
           const rows = params ? stmt.all(...params) : stmt.all();
 
           // Convert SQLite integer booleans to JavaScript booleans for completed field
-          const convertedRows = rows.map((row: any) => {
+          const convertedRows = rows.map((row: Record<string, unknown>) => {
             if ('completed' in row) {
               return { ...row, completed: row.completed === 1 };
             }
@@ -92,9 +98,12 @@ export const setupTestDatabase = (): mysql.Pool => {
         }
 
         throw new Error(`Unsupported SQL operation: ${sql}`);
-      } catch (error: any) {
+      } catch (error: unknown) {
         // Convert SQLite constraint errors to MySQL-like errors
-        if (error.message?.includes('FOREIGN KEY constraint failed')) {
+        if (
+          error instanceof Error &&
+          error.message?.includes('FOREIGN KEY constraint failed')
+        ) {
           throw new Error('Foreign key constraint failed');
         }
         throw error;
